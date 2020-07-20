@@ -1,0 +1,280 @@
+@@include('../../../inc-header.html', {"title": "会员管理"})
+<div class="wrapper wrapper-main">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="row" style="margin-bottom:20px ">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <input type="text" class="form-control" id="searchCont" autocomplete="off" style="width:60%">
+                            <button class="btn btn-secondary" type="button" id="selectsearchlabel">昵称</button>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-primary dropdown-toggle" id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item searchlabel" href="#">昵称</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group" style="margin-left:1%">
+                            <div id="search" class="btn btn-primary" style="outline:none">提交搜索</div>
+                        </div>
+                        <div class="btn-group" style="float:right;display: none">
+                            <button id="addModal" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="outline:none;margin-left: 3px">新增</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" id="sampleTable"></table>
+                        <div id="visaPagination" class="d-flex justify-content-end">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 列表模板 -->
+<script id="visaListItem" type="text/html">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <!--<th>头像</th>-->
+        <!--<th class="em-min-7">-->
+            <!--<div class="dropdown">-->
+                <!--<span class="dropdown-toggle" id="dropTop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                    <!--<%= sourceText %>-->
+                <!--</span>-->
+                <!--<div class="dropdown-menu" aria-labelledby="dropTop" id="dropTopOptions">-->
+                    <!--<a class="dropdown-item" href="javascript:" data-id="">所有</a>-->
+                    <!--<a class="dropdown-item" href="javascript:" data-id="1">weixin</a>-->
+                    <!--<a class="dropdown-item" href="javascript:" data-id="2">机器人</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</th>-->
+        <!--<th>来源</th>-->
+        <th class="em-min-7">
+            <div class="dropdown">
+                <span class="dropdown-toggle" id="dropStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <%= statusText %>
+                </span>
+                <div class="dropdown-menu" aria-labelledby="dropdownVisaStatus" id="dropStatusOptions">
+                    <a class="dropdown-item" href="javascript:" data-id="">所有</a>
+                    <a class="dropdown-item" href="javascript:" data-id="1">允许登录</a>
+                    <a class="dropdown-item" href="javascript:" data-id="2">禁止登录</a>
+                </div>
+            </div>
+        </th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% if (dataArr.length > 0) { %>
+    <% for (var i = 0; i < dataArr.length; i++) { %>
+    <tr data-id="<%= dataArr[i].id %>">
+        <td><%= dataArr[i].id %></td>
+        <td>
+            <a style="text-decoration: underline" target="_blank" href="@@HOST_tpl/view/qdTrip/userDetails.html?id=<%= dataArr[i].id %>"><%= dataArr[i].nickName %></a>
+        </td>
+
+        <td><%- dataArr[i].statusText %></td>
+        <td>
+            <div class="d-flex flex-wrap justify-content-center">
+                <a target="_blank" href="@@HOST_tpl/view/qdTrip/userDetails.html?id=<%= dataArr[i].id %>" class="btn btn-info">查看详情</a>
+                <%- dataArr[i].materialButtonGroup %>
+            </div>
+        </td>
+    </tr>
+    <% } %>
+    <% } else { %>
+    <tr>
+        <td colspan="10">没有符合条件的记录</td>
+    </tr>
+    <% } %>
+    </tbody>
+</script>
+<!--Modal查看用户信息-->
+<script id="modalDiv" type="text/html">
+    <form id="visaPassportForm" disabled="true">
+        <fieldset>
+            <input type="hidden" name="id" value="<%= dataArr.id %>">
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">昵称</span>
+                        </div>
+                        <input type="text" name="nickName" placeholder="" value="<%= dataArr.nickName %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">绑定手机</span>
+                        </div>
+                        <input type="text" name="mobile" placeholder="" value="<%= dataArr.mobile %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">登录天数</span>
+                        </div>
+                        <input type="text" name="loginDays" placeholder="" value="<%= dataArr.loginDays %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">创建时间</span>
+                        </div>
+                        <input type="text" name="createTime" placeholder="" value="<%= dataArr.createTime %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">经验</span>
+                        </div>
+                        <input type="text" name="experience" placeholder="" value="<%= dataArr.experience %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">等级</span>
+                        </div>
+                        <input type="text" name="grade" placeholder="" value="<%= dataArr.grade %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">思维能量</span>
+                        </div>
+                        <input type="text" name="thinkingEnergy" placeholder="" value="<%= dataArr.thinkingEnergy %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">当前思维榜排名</span>
+                        </div>
+                        <input type="text" name="thinkingEnergy_Current" placeholder="" value="<%= dataArr.thinkingEnergy_Current %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">思维榜排名历史最高</span>
+                        </div>
+                        <input type="text" name="thinkingEnergy_historyTop" placeholder="" value="<%= dataArr.thinkingEnergy_historyTop %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测失败次数</span>
+                        </div>
+                        <input type="text" name="predictFuture_failCnt" placeholder="" value="<%= dataArr.predictFuture_failCnt %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测失败当前排名</span>
+                        </div>
+                        <input type="text" name="predictFuture_failCurrent" placeholder="" value="<%= dataArr.predictFuture_failCurrent %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测失败历史最高排名</span>
+                        </div>
+                        <input type="text" name="predictFuture_failHistoryTop" placeholder="" value="<%= dataArr.predictFuture_failHistoryTop %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测成功次数</span>
+                        </div>
+                        <input type="text" name="predictFuture_successCnt" placeholder="" value="<%= dataArr.predictFuture_successCnt %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测成功当前排名</span>
+                        </div>
+                        <input type="text" name="predictFuture_successCurrent" placeholder="" value="<%= dataArr.predictFuture_successCurrent %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">预测成功历史最高排名</span>
+                        </div>
+                        <input type="text" name="predictFuture_successHistoryTop" placeholder="" value="<%= dataArr.predictFuture_successHistoryTop %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</script>
+<!--Modal关进警察局-->
+<script id="modalPoliceDiv" type="text/html">
+    <form id="policeForm" disabled="true">
+        <fieldset>
+            <input type="hidden" name="userId" value="<%= dataArr.userId %>">
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-8">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">罪名</span>
+                        </div>
+                        <input type="text" name="charge" placeholder="请输入关押罪名" value="<%= dataArr.charge %>" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">关押天数</span>
+                        </div>
+                        <input type="text" name="day" placeholder="请输入关押天数" value="<%= dataArr.day %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</script>
+<!--Modal机器人充值能量-->
+<script id="modalRobotDiv" type="text/html">
+    <form id="robotForm" disabled="true">
+        <fieldset>
+            <input type="hidden" name="id" value="<%= dataArr.id %>">
+            <div class="form-row" style="margin-bottom: 15px">
+                <div class="col-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">充能量值</span>
+                        </div>
+                        <input type="text" name="energy" placeholder="请输入能量值" value="<%= dataArr.energy %>" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</script>
+<script data-main="/public/js/module/qdTrip/user"></script>
+@@include('../../../inc-footer.html')

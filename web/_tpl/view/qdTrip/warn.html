@@ -1,0 +1,45 @@
+@@include('../../../inc-header.html', {"title": "警告信息"})
+<div class="wrapper wrapper-main">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body" style="border:1px solid #e7eaec">
+                    <div class="ibox-title">
+                        <h5>警告消息列表</h5>
+                    </div>
+                    <div class="ibox-content fs-4" id="sampleTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 列表模板 -->
+<script id="visaListItem" type="text/html">
+    <table class="table">
+        <tbody>
+        <% if (dataArr.length > 0) { %>
+        <% for (var i = 0; i < dataArr.length; i++) { %>
+        <tr data-id="<%= dataArr[i].id %>">
+            <td class="text-left">
+                <% if (dataArr[i].type == 1) { %>
+                <a style="text-decoration: underline" target="_blank" href="@@HOST_tpl/view/qdTrip/goodsShortageRegistration.html?warn=1"><%= dataArr[i].title %><span style="color:red">【<%= dataArr[i].cnt %>条】</span></a>
+                <% }else if(dataArr[i].type == 2){ %>
+
+                <% }else if(dataArr[i].type == 3){ %>
+
+                <% }else{ %>
+                <%= dataArr[i].title %><span style="color:red">【<%= dataArr[i].cnt %>人】</span>
+                <% } %>
+            </td>
+        </tr>
+        <% } %>
+        <% } else { %>
+        <tr>
+            <td colspan="8">没有符合条件的记录</td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>
+<script data-main="/public/js/module/qdTrip/warn"></script>
+@@include('../../../inc-footer.html')

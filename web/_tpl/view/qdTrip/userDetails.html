@@ -1,0 +1,68 @@
+@@include('../../../inc-header.html', {"title": "会员详情"})
+<div class="wrapper wrapper-main">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <div id="basicMessage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--用户基本信息模板-->
+<script id="basicList" type="text/html">
+    <div style="padding: 20px; border: 1px solid lightgray;background: #f2f2f2;margin-bottom: 30px;">
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-9">
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">ID</span>
+                            </div>
+                            <input name="id" type="text" value="<%= dataArr.id %>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">昵称</span>
+                            </div>
+                            <input type="text" value="<%= dataArr.nickName %>" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">来源</span>
+                            </div>
+                            <input type="text" placeholder="" value="<%= dataArr.sourceText %>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">创建时间</span>
+                            </div>
+                            <input type="text" placeholder="" value="<%= dataArr.createTime %>" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-6">
+                <% if (dataArr.status==1) { %>
+                <button class="btn btn-danger" type="button" data-operate="notAllow">禁止登录</button>
+                <% } else { %>
+                <button class="btn btn-primary" type="button" data-operate="allow">允许登录</button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</script>
+<script data-main="/public/js/module/qdTrip/userDetails"></script>
+@@include('../../../inc-footer.html')
